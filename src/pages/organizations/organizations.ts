@@ -1,22 +1,33 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, LoadingController } from 'ionic-angular';
 
-/*
-  Generated class for the Organizations page.
 
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
 @Component({
   selector: 'page-organizations',
   templateUrl: 'organizations.html'
 })
 export class OrganizationsPage {
+	loading : any;
+	constructor(public navCtrl: NavController, private loadingCtrl: LoadingController) {
+		this.loading = this.loadingCtrl.create({
+			content: 'Please wait...'
+		});
+		this.showLoader();
+	}
 
-  constructor(public navCtrl: NavController) {}
+	showLoader(){
+		this.loading.present();
+	}
 
-  ionViewDidLoad() {
-    console.log('Organizations Page Loaded');
-  }
+	hideLoader(){
+		 setTimeout(() => {
+			this.loading.dismissAll();
+		  }, 1000);
+	}
+
+	ionViewDidLoad() {
+		console.log('Organizations Page Loaded');
+		this.hideLoader();
+	}
 
 }

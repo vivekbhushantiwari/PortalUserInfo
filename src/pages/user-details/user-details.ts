@@ -1,36 +1,48 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams  } from 'ionic-angular';
+import { NavController, NavParams, LoadingController } from 'ionic-angular';
 
-// Import GithubUsers provider
-import {GithubUsers} from '../../providers/github-users';
-
-// Import User model
+import {UsersServiceProvider} from '../../providers/users-provider';
 import {User} from '../../models/user';
 
-/*
-  Generated class for the UserDetails page.
 
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
 @Component({
   selector: 'page-user-details',
   templateUrl: 'user-details.html',
-  providers: [GithubUsers]
+  providers: [UsersServiceProvider]
 })
 export class UserDetailsPage  {
 	login: string;
 	user: User = new User;
+	loading : any;
 	
-	constructor(public navCtrl: NavController, navParams: NavParams, githubUsers: GithubUsers) {
-		// Retrieve the login from the navigation parameters
+	constructor(public navCtrl: NavController, navParams: NavParams, usersObj: UsersServiceProvider,  private loadingCtrl: LoadingController) {
+		//Retrieve the login value from the navigation parameters
 		this.login = navParams.get('login');
-		// Get the user details and log
-		githubUsers.loadDetails(this.login).then( user => this.user = user);
+		
+		this.loading = this.loadingCtrl.create({
+			content: 'Please wait...'
+		});
+		this.showLoader();
+		
+		//Get the user details from api
+		usersObj.loadDetails(this.login).then( (userData) => {
+			this.user = userData
+			this.hideLoader();
+		});
+	}
+	
+	showLoader(){
+		this.loading.present();
+	}
+	
+	hideLoader(){
+		 setTimeout(() => {
+            this.loading.dismissAll();
+          }, 1000);
 	}
 	
 	ionViewDidLoad() {
-		console.log('Hello UserDetails Page');
+		console.log('UserDetails Page Loaded');
 	}
 
 }

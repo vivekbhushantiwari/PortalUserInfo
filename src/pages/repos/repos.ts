@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, LoadingController } from 'ionic-angular';
 
 /*
   Generated class for the Repos page.
@@ -13,10 +13,27 @@ import { NavController } from 'ionic-angular';
 })
 export class ReposPage {
 
-  constructor(public navCtrl: NavController) {}
+	loading : any;
+	constructor(public navCtrl: NavController, private loadingCtrl: LoadingController) {
+		this.loading = this.loadingCtrl.create({
+			content: 'Please wait...'
+		});
+		this.showLoader();
+	}
+	
+	showLoader(){
+		this.loading.present();
+	}
+	
+	hideLoader(){
+		 setTimeout(() => {
+			this.loading.dismissAll();
+		  }, 1000);
+	}
 
-  ionViewDidLoad() {
-    console.log('Repos Page Loaded');
-  }
+	ionViewDidLoad() {
+		console.log('Repos Page Loaded');
+		this.hideLoader();
+	}
 
 }
